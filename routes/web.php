@@ -38,9 +38,7 @@ Route::get('/', function () {
 Route::middleware(['web', 'auth'])->group(function () {
     // Inertia ページ表示
     Route::get('/analysis', [AnalysisController::class, 'index'])->name('analysis');
-    Route::get('/hinbans/show/{id}', function ($id) {
-        return inertia('Hinbans/Show', ['id' => $id]);
-    })->name('hinbans.show2');
+
 });
 
 Route::middleware(['web', 'auth'])->prefix('api')->group(function () {
@@ -119,7 +117,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/csv-progress', [CsvImportController::class, 'progress'])->name('csv.import.progress');
     // Menu, Analysis
     // Route::get('analysis', [AnalysisController::class, 'index'])->name('analysis');
-    Route::get('analysis/test', [AnalysisController::class, 'test'])->name('analysis.test');
+    // Route::get('analysis/test', [AnalysisController::class, 'test'])->name('analysis.test');
     Route::get('menu', [MenuController::class, 'menu'])->name('menu');
     Route::get('welcome', [MenuController::class, 'welcome'])->name('welcome');
     Route::get('/sales/comparison', [SalesComparisonController::class, 'index'])

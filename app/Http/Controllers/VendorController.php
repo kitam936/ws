@@ -34,7 +34,7 @@ class VendorController extends Controller
         ->withQueryString();
 
 
-        // dd($vendors, $areas, $companies);
+        // dd($vendors, $areas, $vendors);
 
         return Inertia::render('Vendors/Index', [
             'vendors' => $vendors,
@@ -49,7 +49,10 @@ class VendorController extends Controller
      */
     public function create()
     {
-        //
+        return Inertia::render('Vendors/Create', [
+            'old' => session()->getOldInput(),
+            'errors' => session('errors') ? session('errors')->getBag('default')->getMessages() : [],
+        ]);
     }
 
     /**
@@ -57,7 +60,32 @@ class VendorController extends Controller
      */
     public function store(StoreVendorRequest $request)
     {
-        //
+        $request->validate([
+            'vendor_name' => ['required', 'string', 'max:255'],
+            'vendor_id' => ['required'],
+            'vendor_info' => ['string', 'max:255'],
+
+            // 'is_working' => ['required', 'boolean'],
+        ]);
+
+        // dd($request->all());
+
+        try{
+            DB::transaction(function()use($request){
+                Vendor::create([
+                    'id' => $request->vendor_id,
+                    'vendor_name' => $request->vendor_name,
+                    'vendor_info' => $request->vendor_info,
+                    'is_working' => 1,
+                ]);
+
+            },2);
+        }catch(Throwable $e){
+            Log::error($e);
+            throw $e;
+        }
+
+        return to_route('vendors.index')->with(['message'=>'登録されました','status'=>'info']);
     }
 
     /**
@@ -65,7 +93,25 @@ class VendorController extends Controller
      */
     public function show(Vendor $vendor)
     {
-        //
+            // ユーザーの詳細を取得
+            $login_user = Auth::user(); // ← これの方が安全
+
+            $vendor = DB::table('vendors')
+            ->where('vendors.id', $vendor->id)
+            ->select(
+                'vendors.id as vendor_id',
+                'vendors.vendor_name',
+                'vendors.vendor_info',
+                'vendors.is_working',
+            )
+
+            ->first();
+
+
+            return Inertia::render('Vendors/Show', [
+                'vendor' => $vendor,
+                'login_user' => $login_user,
+            ]);
     }
 
     /**
@@ -73,7 +119,11 @@ class VendorController extends Controller
      */
     public function edit(Vendor $vendor)
     {
-        //
+        return Inertia::render('Vendors/Edit', [
+            'vendor' => $vendor,
+            'old' => session()->getOldInput(),
+            'errors' => session('errors') ? session('errors')->getBag('default')->getMessages() : [],
+        ]);
     }
 
     /**
@@ -81,7 +131,33 @@ class VendorController extends Controller
      */
     public function update(UpdateVendorRequest $request, Vendor $vendor)
     {
-        //
+        $request->validate([
+            // 'id' => ['required', 'exists:shops,id'],
+            'vendor_name' => ['required', 'string', 'max:255'],
+            'vendor_info' => ['string', 'max:255'],
+            'is_working' => ['required', 'boolean'],
+        ]);
+
+        $vendor = Vendor::findOrFail($vendor->id);
+
+        // dd($request->all(), $vendor);
+
+        try{
+            DB::transaction(function()use($request, $vendor){
+                $vendor->update([
+                    'id' => $request->vendor_id,
+                    'vendor_name' => $request->vendor_name,
+                    'vendor_info' => $request->vendor_info,
+                    'is_working' => $request->is_working,
+                ]);
+            },2);
+        }
+        catch(Throwable $e){
+            Log::error($e);
+            throw $e;
+        }
+
+        return to_route('vendors.index')->with(['message'=>'更新されました','status'=>'info']);
     }
 
     /**
@@ -89,6 +165,8 @@ class VendorController extends Controller
      */
     public function destroy(Vendor $vendor)
     {
-        //
+        $vendor->delete();
+
+        return to_route('vendors.index')->with(['message'=>'削除されました','status'=>'alert']);
     }
 }

@@ -9,7 +9,6 @@ import { useForm ,usePage} from '@inertiajs/vue3'
 
 const props = defineProps({
     vendor: Object,
-
     errors : Object,
 })
 
@@ -18,11 +17,11 @@ const form = useForm({
     vendor_id: props.vendor.id,
     vendor_name: props.vendor.vendor_name,
     vendor_info: props.vendor.vendor_info,
-    pic_id: props.vendor.pic_id,
+    is_working: props.vendor.is_working,
   });
 
-  const updatevendor = () => {
-    form.put(route('vendor.update', { vendor: form.vendor_id }));
+  const updateVendor = () => {
+    form.put(route('vendors.update', { vendor: form.vendor_id }));
   };
 
 
@@ -50,7 +49,7 @@ const goBack = () => {
                     </button>
                 </div>
                 <div class="ml-2 md:ml-24 mb-0">
-                    <Link as="button" :href="route('vendor.index')" class="w-40 h-10 bg-indigo-500 text-sm text-white ml-0 hover:bg-indigo-600 rounded">会社一覧</Link>
+                    <Link as="button" :href="route('vendors.index')" class="w-40 h-10 bg-indigo-500 text-sm text-white ml-0 hover:bg-indigo-600 rounded">会社一覧</Link>
                 </div>
             </div>
         </template>
@@ -62,7 +61,7 @@ const goBack = () => {
                     <div class="p-2 text-gray-900">
                         <section class="text-gray-600 body-font relative">
 
-                            <form @submit.prevent="updatevendor(form.id)">
+                            <form @submit.prevent="updateVendor(form.vendor_id)">
                                 <div class="container px-5 py-2 mx-auto">
                                     <div class="lg:w-1/2 md:w-2/3 mx-auto">
                                     <div class="flex flex-wrap -m-2">
@@ -88,6 +87,14 @@ const goBack = () => {
                                                 <label for="vendor_info" class="leading-7 text-sm text-gray-600">詳細</label>
                                                 <textarea id="vendor_info" name="vendor_info"  v-model="form.vendor_info" class="w-full bg-gray-100 bg-opacity-50 rounded border border-gray-300 focus:border-indigo-500 focus:bg-white focus:ring-2 focus:ring-indigo-200 h-32 text-base outline-none text-gray-700 py-1 px-3 resize-none leading-6 transition-colors duration-200 ease-in-out"></textarea>
                                                 <div v-if="errors.vendor_info" class="text-red-500">{{ errors.vendor_info }}</div>
+                                            </div>
+                                        </div>
+
+                                        <div class="ml-2 w-1/2 ">
+                                            <label for="is_working" class="leading-7 text-sm  text-gray-800 dark:text-gray-200 ">状態</label>
+                                            <div class="relative flex justify-around">
+                                                <div><input type="radio" name="is_working" value="1" class="mr-2" v-model="form.is_working">運用中</div>
+                                                <div><input type="radio" name="is_working" value="0" class="mr-2" v-model="form.is_working">休止</div>
                                             </div>
                                         </div>
 

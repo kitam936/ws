@@ -77,17 +77,21 @@
                                     <th class="w-1/15 md:1/15 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">id</th>
                                     <th class="w-2/15 md:2/15 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100">仕入先名</th>
                                     <th class="w-3/15 md:3/15 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100  hidden sm:table-cell">info</th>
-
+                                    <th class="w-1/15 md:1/15 md:px-4 py-1 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-100 hidden sm:table-cell ">状態</th>
                                 </tr>
                             </thead>
 
                             <tbody>
                                 <tr v-for="vendor in vendors.data" :key="vendor.vendor_id">
                                     <td class="border-b-2 boder-gray-200">
-                                        <Link class="text-indigo-500" :href="route('vendor.show',{vendor:vendor.vendor_id})">{{ vendor.vendor_id }} </Link>
+                                        <Link class="text-indigo-500" :href="route('vendors.show',{vendor:vendor.vendor_id})">{{ vendor.vendor_id }} </Link>
                                     </td>
-                                    <td class="border-b-2 boder-gray-200 ">{{ vendor_name }} </td>
-                                    <td class="border-b-2 boder-gray-200 text-left hidden sm:table-cell">{{ vendor_info ? vendor_info.substring(0, 15) : '' }} </td>
+                                    <td class="border-b-2 boder-gray-200 ">{{ vendor.vendor_name }} </td>
+                                    <td class="border-b-2 boder-gray-200 text-left hidden sm:table-cell">{{ vendor.vendor_info ? vendor.vendor_info.substring(0, 15) : '' }} </td>
+                                    <td class="border-b-2 boder-gray-200 hidden sm:table-cell ">
+                                        <span v-if="vendor.is_working == 1 ">運用中</span>
+                                        <span v-if="vendor.is_working == 0 ">休止</span>
+                                    </td>
 
                                 </tr>
 

@@ -25,7 +25,7 @@ const form = useForm({
 
 
 const storevendor = () => {
-    router.post('/vendor', form)
+    router.post('/vendors', form)
 }
 
 // 戻るボタンの処理
@@ -36,7 +36,7 @@ const goBack = () => {
 </script>
 
 <template>
-    <Head title="会社登録" />
+    <Head title="仕入先登録" />
 
     <AuthenticatedLayout>
         <template #header>
@@ -51,7 +51,7 @@ const goBack = () => {
                     </button>
                 </div>
                 <div class="ml-2 md:ml-24 mb-0">
-                    <Link as="button" :href="route('vendor.index')" class="w-40 h-10 bg-indigo-500 text-sm text-white ml-0 hover:bg-indigo-600 rounded">仕入先一覧</Link>
+                    <Link as="button" :href="route('vendors.index')" class="w-40 h-10 bg-indigo-500 text-sm text-white ml-0 hover:bg-indigo-600 rounded">仕入先一覧</Link>
                 </div>
             </div>
         </template>
